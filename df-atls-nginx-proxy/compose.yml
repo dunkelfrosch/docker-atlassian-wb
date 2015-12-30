@@ -20,7 +20,7 @@ nginx:
     - "80:80"
     - "443:443"
 
-  # external_links:
-    # - df-atls-confluence-app:docker.confluence.host
-    # - df-atls-bitbucket-app:docker.bitbucket.host
-    # - df-atls-jira-app:docker.jira.host
+  external_links:
+    - df-atls-confluence-app:docker.confluence.host
+    - df-atls-bitbucket-app:docker.bitbucket.host
+    - df-atls-jira-app:docker.jira.host
