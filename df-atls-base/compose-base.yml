@@ -1,0 +1,15 @@
+app:
+  restart: 'always'
+  dns:
+    - 8.8.8.8
+    - 8.8.4.4
+
+  privileged: false
+  stdin_open: true
+  tty: true
+
+app-data:
+  restart: 'no'
+  privileged: false
+  stdin_open: false
+  tty: false

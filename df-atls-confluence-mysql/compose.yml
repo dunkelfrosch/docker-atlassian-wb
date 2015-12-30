@@ -1,0 +1,21 @@
+#
+# docker compose file for our atlassian product workbench. the following products will be handled by this build:
+#
+# - mysql (v5.7.n), confluence service container
+#
+# @copyright (c) 2015 dunkelfrosch, patrick.paechnatz@gmail.com,
+# @version 1.0.0
+#
+
+# [confluence mysql main container] -----------------------------------------------------------------------------------
+mysql:
+  container_name: df-atls-confluence-mysql
+  build: .
+  extends:
+    file: ../df-atls-base/compose-base.yml
+    service: app
+
+  environment:
+    MYSQL_DATABASE: 'confluence'
+    MYSQL_ROOT_PASSWORD: 'vi5cot0oAt1K'
+

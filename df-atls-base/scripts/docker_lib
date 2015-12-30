@@ -1,0 +1,275 @@
+#!/usr/bin/env bash
+#
+# our base docker bash utils, help working with docker in local environment
+#
+# @version      0.0.7
+# @author       dunkelfrosch <patrick.paechnatz@gmail.com>
+# @lastChanges  2015/11/29, 2:43am, patrick.paechnatz@gmail.com
+#
+# ---------------------------------------------------------------------------------------------------------------------
+
+# print out some meta information about container currently running
+# ---------------------------------------------------------------------------------------------------------------------
+#
+_show_container_status() {
+
+    CONTAINER_NAME=""
+    CONTAINER_STATUS=""
+    CONTAINER_IP="0.0.0.0"
+
+    while [[ ${1} ]]; do
+        case "${1}" in
+            -n)
+                CONTAINER_NAME="${2}"
+                shift
+                ;;
+            --name)
+                CONTAINER_NAME="${2}"
+                shift
+                ;;
+
+        esac
+        if ! shift; then
+            echo "missing parameter argument (-n|--name)" >&2
+            return 1
+        fi
+
+    done
+
+    #if ! _check_container_running --container_name "${CONTAINER_NAME}"; then
+        CONTAINER_STATUS=$(docker ps --all --format '{{.ID}} -> time up: {{.RunningFor}} : {{.Names}}' | grep ${CONTAINER_NAME});
+        CONTAINER_IP=$(docker inspect --format "{{ .NetworkSettings.IPAddress }}" ${CONTAINER_NAME});
+
+        if [ -z "${CONTAINER_IP}" ]; then
+             CONTAINER_IP='000.000.000.000'
+        fi
+
+        echo -e "\n\033[1;92m${CONTAINER_IP}\033[0m ▶ container1 : ${CONTAINER_STATUS}\c"
+    #fi
+
+    return 0
+}
+
+# check on running container, return false|true
+# ---------------------------------------------------------------------------------------------------------------------
+# @param 1 : container_name, name of the container process
+# @param 2 : deep_scan,      0|1, if (1) enabled, we will use param -a to fetch all exited container also
+#
+_check_container_running() {
+
+    CONTAINER_NAME=""
+    DEEP_SCAN=0
+    SCAN_PARAM=''
+    RUNNING=0
+
+    while [[ ${1} ]]; do
+        case "${1}" in
+            --container_name)
+                CONTAINER_NAME="${2}"
+                shift
+                ;;
+            --deep_scan)
+                DEEP_SCAN="${2}"
+                shift
+                ;;
+
+        esac
+        if ! shift; then
+            echo "parameter/error 000" "missing parameter argument." >&2
+            return 1
+        fi
+
+    done
+
+    if [ ${DEEP_SCAN} -eq 1 ]; then
+        SCAN_PARAM='-a'
+    fi
+
+    return $(docker ps ${SCAN_PARAM} | grep -E -o "\b${CONTAINER_NAME}$\b" | awk '{print $1}' | wc -l)
+}
+
+# clean dangling images from client repository base
+# ---------------------------------------------------------------------------------------------------------------------
+#
+_cleanup_dangling_images() {
+
+    DANGLING_IMAGES=0
+
+    # docker images | grep "^<none>" | awk '{print $3}'
+    DANGLING_IMAGES=$(docker images -q --filter "dangling=true" | wc -l)
+    if [ ! ${DANGLING_IMAGES} -eq 0 ]; then
+        echo -e "\033[1;37m -- ⚑ -- REMOVE DANGLING IMAGES\033[0m"
+        docker rmi -f $(docker images -q --filter "dangling=true")
+    fi
+}
+
+#
+# create a new docker image file, check for existing ones
+#
+_docker_build() {
+
+    IMAGE_ID=""
+    IMAGE_TAG=""
+    DOCKER_FILE=""
+
+    while [[ ${1} ]]; do
+        case "${1}" in
+            --set_image_tag)
+                IMAGE_TAG="${2}"
+                shift
+                ;;
+            --use_dockerfile)
+                DOCKER_FILE="${2}"
+                shift
+                ;;
+        esac
+        if ! shift; then
+            echo "parameter/error 002" "missing parameter argument." >&2
+            return 1
+        fi
+
+    done
+
+    _cleanup_existing_image --image_tag ${IMAGE_TAG}
+
+    #
+    # build: base image
+    #
+    docker build \
+        --quiet \
+        --force-rm=true \
+        --disable-content-trust=true \
+        -f ${DOCKER_FILE} -t ${IMAGE_TAG} .
+}
+
+# clean existing image including all corresponding running/available container instances
+# ---------------------------------------------------------------------------------------------------------------------
+# @param : image_name, name of the image to check
+#
+_cleanup_existing_image() {
+
+    IMAGE_ID=""
+    IMAGE_TAG=""
+
+    while [[ ${1} ]]; do
+        case "${1}" in
+            --image_tag)
+                IMAGE_TAG="${2}"
+                shift
+                ;;
+        esac
+        if ! shift; then
+            echo "parameter/error 003" "missing parameter argument." >&2
+            return 1
+        fi
+
+    done
+
+    IMAGE_ID=$(docker images ${IMAGE_TAG} | grep -w "${IMAGE_TAG}" | awk '{print $3}')
+    if [ -n "${IMAGE_ID}" ]; then
+        echo -e "\033[1;37m -- ⚑ -- IMAGE ALREADY EXIST\033[0m"
+        echo -e "the docker image already exist on this host -> name: [\033[1;37m${IMAGE_TAG}\033[0m], id: [\033[1;37m${IMAGE_ID}\033[0m]\n"
+        echo -e "delete old image? [y/N]:"
+        read USER_CHOICE;
+        if [ "$USER_CHOICE" == "y" ]; then
+            # remove all running container using this image
+            CONTAINER_BLK=$(docker ps -a | grep -w "${IMAGE_TAG}" | awk '{print $1}')
+            if [ -n "${CONTAINER_BLK}" ]; then
+                echo -e "\033[1;37m -- ⚑ -- REMOVE RUNNING CONTAINER FOR IMAGE [${IMAGE_TAG}]\033[0m"
+                docker rm -f -v ${CONTAINER_BLK}
+            fi
+            # remove old image
+            echo -e "\033[1;37m -- ⚑ -- REMOVE OLD IMAGE [${IMAGE_TAG}]\033[0m"
+            docker rmi -f "${IMAGE_ID}"
+        else
+            exit 9
+        fi
+    fi
+}
+
+# clean all (!) docker volumes
+# ---------------------------------------------------------------------------------------------------------------------
+#
+_cleanup_volumes() {
+
+    docker volume rm $(docker volume ls | awk '{print $2}')
+}
+
+# clean old container instances from client docker process base
+# ---------------------------------------------------------------------------------------------------------------------
+#
+_cleanup_container() {
+
+    CONTAINER_NAME=""
+    CONTAINER_PORT=0
+
+    while [[ ${1} ]]; do
+        case "${1}" in
+            --container_name)
+                CONTAINER_NAME="${2}"
+                shift
+                ;;
+            --container_port)
+                CONTAINER_PORT="${2}"
+                shift
+                ;;
+
+        esac
+        if ! shift; then
+            echo "parameter/error 004" "missing parameter argument." >&2
+            return 1
+        fi
+
+    done
+
+    #
+    # remove old instances of given container
+    #
+    if [ ! $(docker ps -a | grep "${CONTAINER_NAME}" | awk '{print $1}' | wc -l) -eq 0 ]; then
+        echo -e "\033[1;37m -- ⚑ -- REMOVE RUNNING CONTAINER [${CONTAINER_NAME}]\033[0m"
+        docker ps -a | grep "${CONTAINER_NAME}" | awk '{print $1}' | xargs docker rm -f -v >/dev/null 2>&1
+    fi
+
+    if [ ! ${CONTAINER_PORT} -eq 0 ]; then
+        #
+        # remove all other container using given port
+        #
+        echo -e "\033[1;37m -- ⚑ -- REMOVE RUNNING CONTAINER FOR IMAGE [${IMAGE_TAG}] USING PORT [${CONTAINER_PORT}]\033[0m"
+        docker ps -a | grep "0.0.0.0:${CONTAINER_PORT}" | awk '{print $1}' | xargs docker rm -f -v >/dev/null 2>&1
+    fi
+}
+
+# check execution environment, am i outside a container process? return false|true
+# ---------------------------------------------------------------------------------------------------------------------
+#
+_outside_docker() {
+
+    if [ -f /.dockerinit ]; then
+        # host call? leave build process!
+        echo -e "\033[0;31m -- ✗ -- this script will only be executable outside container environment <aborted>!\033[0m";
+        exit 127
+    fi
+}
+
+# check execution environment, am i inside a container process? return false|true
+# ---------------------------------------------------------------------------------------------------------------------
+#
+_inside_docker() {
+-z
+    if [ -f /.dockerinit ]; then
+        # host call? leave build process!
+        echo -e "\033[0;31m -- ✗ -- this script will only be executable outside container environments <aborted>!\033[0m";
+        exit 127
+    fi
+}
+
+# print out some information about the current docker build state
+# ---------------------------------------------------------------------------------------------------------------------
+#
+_docker_build_info() {
+
+    echo -e "\033[1;37m\n -- ⚑ -- CURRENTLY RUNNING CONTAINER (ALL) \033[0m\n"
+    docker ps -a
+    echo -e "\033[1;37m\n -- ⚑ -- CURRENTLY AVAILABLE IMAGES\033[0m\n"
+    docker images
+}

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# @copyright (c) 2015 dunkelfrosch, patrick.paechnatz@gmail.com,
+# @version 1.0.0
+#
+
+set -e
+
+docker exec -it --user root df-atls-bitbucket-app /bin/bash

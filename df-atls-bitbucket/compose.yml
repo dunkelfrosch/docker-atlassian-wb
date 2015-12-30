@@ -1,0 +1,70 @@
+#
+# docker compose file for our atlassian product workbench. the following products will be handled by this build:
+#
+# - atlassian bitbucket (v4.1.0), main app container
+# - mysql (5.6.n), db service container
+#
+# * bitbucket.host
+# * bitbucket.mysql
+#
+# : bitbucket
+# : bitbucket_data
+# : bitbucket_mysql
+# : bitbucket_mysql_data
+#
+# @copyright (c) 2015 dunkelfrosch, patrick.paechnatz@gmail.com,
+# @version 1.0.0
+#
+
+# [bitbucket main container] ------------------------------------------------------------------------------------------
+bitbucket:
+  container_name: df-atls-bitbucket-app
+  build: .
+
+  extends:
+    file: ../df-atls-base/compose-base.yml
+    service: app
+
+  ports:
+    - "7990:7990"
+    - "7999:7999"
+
+  links:
+    - bitbucket_mysql:bitbucket.mysql
+
+  volumes_from:
+    - bitbucket_data:rw
+
+# [bitbucket data container] ------------------------------------------------------------------------------------------
+bitbucket_data:
+  container_name: df-atls-bitbucket-app-data
+  build: .
+
+  extends:
+    file: ../df-atls-base/compose-base.yml
+    service: app-data
+
+  entrypoint: /bin/echo "data-only container for bitbucket"
+
+# [bitbucket mysql service container] ---------------------------------------------------------------------------------
+bitbucket_mysql:
+  container_name: df-atls-bitbucket-mysql
+  build: ../df-atls-bitbucket-mysql
+
+  extends:
+    file: ../df-atls-bitbucket-mysql/compose.yml
+    service: mysql
+
+  volumes_from:
+    - bitbucket_mysql_data:rw
+
+# [bitbucket mysql data container] ------------------------------------------------------------------------------------
+bitbucket_mysql_data:
+  container_name: df-atls-bitbucket-mysql-data
+  build: ../df-atls-bitbucket-mysql
+
+  extends:
+    file: ../df-atls-base/compose-base.yml
+    service: app-data
+
+  entrypoint: /bin/echo "data-only container for bitbucket mysql"

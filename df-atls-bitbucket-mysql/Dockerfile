@@ -1,0 +1,55 @@
+#
+# BUILD    : DF/[ATLASSIAN][BITBUCKET][MYSQL]
+# OS/CORE  : debian:8
+# SERVICES : mysql 5.6.n
+#
+# VERSION 1.0.0
+#
+
+FROM mysql:5.6
+
+MAINTAINER Patrick Paechnatz <patrick.paechnatz@gmail.com>
+LABEL com.container.vendor="dunkelfrosch impersonate" \
+      com.container.service="atlassian/confluence/mysql" \
+      com.container.priority="1" \
+      com.container.project="confluence" \
+      img.version="1.0.0" \
+      img.description="our main bitbucket atlassian mysql container"
+
+ENV TERM xterm
+ENV LC_ALL C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
+ENV TIMEZONE Europe/Berlin
+
+USER root
+
+# prepare main remote docker helper script path + additions
+RUN mkdir -p /opt/docker \
+             /etc/mysql/conf.d
+
+ADD /opt/docker/* /opt/docker/
+
+# x-layer 1: package manager related processor
+RUN set -e \
+    && apt-get update -qq >/dev/null 2>&1 \
+    && apt-get install -qq -y --no-install-recommends mc ntp >/dev/null 2>&1
+
+# x-layer 2: system core setup related processor
+RUN set -e \
+    && echo "${TIMEZONE}" >/etc/timezone \
+    && dpkg-reconfigure tzdata >/dev/null 2>&1
+
+# x-layer 3: application base setup related processor
+RUN { \
+      echo '[mysqld]'; \
+      echo 'character-set-server=utf8'; \
+      echo 'collation-server=utf8_bin'; \
+      echo '[client]'; \
+      echo 'default-character-set=utf8'; \
+    } > /etc/mysql/conf.d/charset.cnf
+
+# x-layer 4: build script cleanup related processor
+RUN set -e \
+    && sh /opt/docker/cleanup.sh
+
+VOLUME ["/var/lib/mysql"]

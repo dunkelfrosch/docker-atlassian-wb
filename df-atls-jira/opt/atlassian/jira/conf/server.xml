@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+    <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+    <Service name="Catalina">
+
+        <Connector port="8080"
+                   proxyName="_proxyName_"
+                   proxyPort="_proxyPort_"
+                   scheme="_scheme_"
+                   maxThreads="150"
+                   minSpareThreads="25"
+                   connectionTimeout="20000"
+                   redirectPort="443"
+                   secure="true"
+                   enableLookups="false"
+                   maxHttpHeaderSize="8192"
+                   protocol="HTTP/1.1"
+                   useBodyEncodingForURI="true"
+                   acceptCount="100"
+                   disableUploadTimeout="true"/>
+
+        <Engine name="Catalina" defaultHost="localhost">
+
+            <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
+
+                <Context path="_path_" docBase="${catalina.home}/atlassian-jira" reloadable="false" useHttpOnly="true">
+                    <Resource name="UserTransaction" auth="Container" type="javax.transaction.UserTransaction"
+                              factory="org.objectweb.jotm.UserTransactionFactory" jotm.timeout="60"/>
+                    <Manager pathname=""/>
+                </Context>
+
+            </Host>
+
+            <Valve className="org.apache.catalina.valves.AccessLogValve" pattern="%a %{jira.request.id}r %{jira.request.username}r %t &quot;%m %U%q %H&quot; %s %b %D &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; &quot;%{jira.request.assession.id}r&quot;"/>
+
+        </Engine>
+
+    </Service>
+</Server>
