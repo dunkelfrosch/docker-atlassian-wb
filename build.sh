@@ -7,7 +7,7 @@
 set -e
 
 # stop all running workbench container firstly
-./stop
+./stop.sh
 
 # service docker restart
 
