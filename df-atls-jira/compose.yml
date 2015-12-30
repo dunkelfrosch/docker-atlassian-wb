@@ -1,7 +1,7 @@
 #
 # docker compose file for our atlassian product workbench. the following products will be handled by this build:
 #
-# - atlassian jira (v7.0.2), main app container
+# - atlassian jira (v7.0.5), main app container
 #
 # * jira.host
 # * jira.mysql
@@ -30,8 +30,8 @@ jira:
   links:
     - jira_mysql:jira.mysql
 
-  volumes_from:
-    - jira_data:rw
+  # volumes_from:
+  #  - jira_data:rw
 
 # [jira data container] ------------------------------------------------------------------------------------------
 jira_data:
@@ -53,8 +53,8 @@ jira_mysql:
     file: ../df-atls-jira-mysql/compose.yml
     service: mysql
 
-  volumes_from:
-    - jira_mysql_data:rw
+  # volumes_from:
+  #  - jira_mysql_data:rw
 
 # [jira mysql data container] ------------------------------------------------------------------------------------
 jira_mysql_data:
