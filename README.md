@@ -1,4 +1,4 @@
-# Docker Workbench for Atlassian JIRA, Bitbucket and Confluence
+# Docker Workbench for JIRA, Bitbucket & Confluence
 
 *this documentation isn't fully done yet - we're still working on major and minor issues corresponding to this repository base!*
 
@@ -69,8 +69,13 @@ Use our base control script `./build.sh` to build the complete workbench, or edi
 ## Start
 Just use our base control script `./start.sh` to start the complete workbench. All required (linked) services will be build right now ...
 
-*after the successful start build process you may have the following finale images available on your local host. We'll use data container so the image base will be more comprehensive now*
+*after the successful start build process you may have the following finale images available on your local host and all relevant container should be running fine now ...*
 ![](https://dl.dropbox.com/s/tlaq3fy1f4w4ayl/scr_build_img_rslt3.png)
+
+## Check landing-page
+*visit your defined hostname using your favorite browser ...*
+![](https://dl.dropbox.com/s/zxn0atya6ux0yf3/scr_landing_page_001.png)
+
 
 ## Maintenance
 -
