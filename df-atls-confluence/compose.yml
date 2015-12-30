@@ -30,8 +30,8 @@ confluence:
   links:
     - confluence_mysql:confluence.mysql
 
-  volumes_from:
-    - confluence_data:rw
+  # volumes_from:
+  #  - confluence_data:rw
 
 # [confluence data container] ------------------------------------------------------------------------------------------
 confluence_data:
@@ -53,8 +53,8 @@ confluence_mysql:
     file: ../df-atls-confluence-mysql/compose.yml
     service: mysql
 
-  volumes_from:
-    - confluence_mysql_data:rw
+  # volumes_from:
+  #  - confluence_mysql_data:rw
 
 # [confluence mysql data container] ------------------------------------------------------------------------------------
 confluence_mysql_data:

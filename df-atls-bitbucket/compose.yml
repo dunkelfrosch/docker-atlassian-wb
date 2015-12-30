@@ -32,8 +32,8 @@ bitbucket:
   links:
     - bitbucket_mysql:bitbucket.mysql
 
-  volumes_from:
-    - bitbucket_data:rw
+  # volumes_from:
+  #  - bitbucket_data:rw
 
 # [bitbucket data container] ------------------------------------------------------------------------------------------
 bitbucket_data:
@@ -55,8 +55,8 @@ bitbucket_mysql:
     file: ../df-atls-bitbucket-mysql/compose.yml
     service: mysql
 
-  volumes_from:
-    - bitbucket_mysql_data:rw
+  # volumes_from:
+  #  - bitbucket_mysql_data:rw
 
 # [bitbucket mysql data container] ------------------------------------------------------------------------------------
 bitbucket_mysql_data:
