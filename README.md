@@ -21,7 +21,7 @@ For the complete build of all images and failure-free running of all application
 **1**) Checkout this repository
 
 ```bash
-docker pull dunkelfrosch/confluence:5.9.3
+git clone https://github.com/dunkelfrosch/docker-atlassian-wb.git .
 ```
 
 **2**) setup configuration values
