@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 #
-# our base docker bash utils, help working with docker in local environment
+# our base docker bash utils, help working with docker in local environment, not really in use inside this workbench
+# just a give-away and nice-to-have library for your own purposes.
 #
-# @version      0.0.7
+# @version      0.0.8
 # @author       dunkelfrosch <patrick.paechnatz@gmail.com>
-# @lastChanges  2015/11/29, 2:43am, patrick.paechnatz@gmail.com
+# @lastChanges  2016/01/30, 9:32am, patrick.paechnatz@gmail.com
 #
 # ---------------------------------------------------------------------------------------------------------------------
 
