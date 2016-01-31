@@ -3,7 +3,7 @@
 #
 # - mysql (v5.7.n), confluence service container
 #
-# @copyright (c) 2015 dunkelfrosch, patrick.paechnatz@gmail.com,
+# @copyright (c) 2015-2016 dunkelfrosch, patrick.paechnatz@gmail.com,
 # @version 1.0.0
 #
 
@@ -17,5 +17,5 @@ mysql:
 
   environment:
     MYSQL_DATABASE: 'confluence'
-    MYSQL_ROOT_PASSWORD: 'vi5cot0oAt1K'
+    MYSQL_ROOT_PASSWORD: 'please-change-me'
 

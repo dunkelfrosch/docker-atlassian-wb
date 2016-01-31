@@ -3,7 +3,7 @@
 #
 # - mysql (v5.6.n), jira service container
 #
-# @copyright (c) 2015 dunkelfrosch, patrick.paechnatz@gmail.com,
+# @copyright (c) 2015-2016 dunkelfrosch, patrick.paechnatz@gmail.com,
 # @version 1.0.0
 #
 
@@ -17,4 +17,4 @@ mysql:
 
   environment:
     MYSQL_DATABASE: 'jira'
-    MYSQL_ROOT_PASSWORD: 'keyd2Naf9May'
+    MYSQL_ROOT_PASSWORD: 'please-change-me'
