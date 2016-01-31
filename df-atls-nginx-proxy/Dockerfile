@@ -22,10 +22,10 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE "Europe/Berlin"
 
 # Setup additional application config environment variables
-ENV CFG_NGINX_FQN_HOSTNAME   "dunkelfrosch.com"
-ENV CFG_NGINX_URI_JIRA       "/go/to/jira"
-ENV CFG_NGINX_URI_CONFLUENCE "/go/to/confluence"
-ENV CFG_NGINX_URI_BITBUCKET  "/go/to/bitbucket"
+ENV CFG_NGINX_FQN_HOSTNAME     "dunkelfrosch.com"
+ENV CFG_NGINX_URI_JIRA         "/go/to/jira"
+ENV CFG_NGINX_URI_CONFLUENCE   "/go/to/confluence"
+ENV CFG_NGINX_URI_BITBUCKET    "/go/to/bitbucket"
 
 # prepare main remote docker helper script path
 RUN mkdir -p /etc/nginx/sites-available \
@@ -54,6 +54,7 @@ RUN openssl req -new -newkey rsa:4096 -sha256 -days 1095 -nodes -x509 -subj "/C=
 RUN rm -f /etc/nginx/nginx.conf \
     && rm -f /etc/nginx/conf.d/default.conf \
     && mv /opt/docker/nginx.conf /etc/nginx/nginx.conf \
+
     && mv /opt/docker/default.conf /etc/nginx/sites-available/default.conf \
     && sed -i "s|%fqn_hostname%|$CFG_NGINX_FQN_HOSTNAME|g" /etc/nginx/sites-available/default.conf \
     && sed -i "s|%target_url_jira%|$CFG_NGINX_URI_JIRA|g" /etc/nginx/sites-available/default.conf \
@@ -62,6 +63,7 @@ RUN rm -f /etc/nginx/nginx.conf \
     && sed -i "s|%ssl_cert_file%|/etc/ssl/$CFG_NGINX_FQN_HOSTNAME.cer|g" /etc/nginx/sites-available/default.conf \
     && sed -i "s|%ssl_key_file%|/etc/ssl/$CFG_NGINX_FQN_HOSTNAME.key|g" /etc/nginx/sites-available/default.conf \
     && ln -sf /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/df-default \
+
     && chown nginx: /var/www -R \
     && echo "${TIMEZONE}" >/etc/timezone \
     && dpkg-reconfigure tzdata >/dev/null 2>&1
