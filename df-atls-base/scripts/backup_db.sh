@@ -14,7 +14,8 @@ umask 177
 CFG_DATEFILE=$(date +"%d%m%Y")
 CFG_HOSTPATH="/home/dunkelfrosch/backup/docker/df-atls/database"
 CFG_MYSQLDUMP_PARAMS="--opt --compress --force --user root"
-CFG_DROPBOX_UPLOADER="./vendor/dropbox_uploader.sh"
+# take note that you've to create a symbolic link to your dropbox_uploader.sh script for crontab execution!
+CFG_DROPBOX_UPLOADER="/usr/local/bin/dropbox-uploader"
 CFG_DROPBOX_CONFIG="/root/.dropbox_uploader"
 
 _backup_application_db() {
