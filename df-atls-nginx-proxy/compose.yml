@@ -3,7 +3,7 @@
 #
 # - nginx (v1.9.7), main nginx proxy container
 #
-# @copyright (c) 2015 dunkelfrosch, patrick.paechnatz@gmail.com,
+# @copyright (c) 2015-2016 dunkelfrosch, patrick.paechnatz@gmail.com,
 # @version 1.0.0
 #
 
@@ -20,7 +20,3 @@ nginx:
     - "80:80"
     - "443:443"
 
-  external_links:
-    - df-atls-confluence-app:docker.confluence.host
-    - df-atls-bitbucket-app:docker.bitbucket.host
-    - df-atls-jira-app:docker.jira.host
