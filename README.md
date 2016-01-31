@@ -70,11 +70,11 @@ Use our base control script `./wb_init.sh` to build the complete workbench, or e
 *check/visit the landing page of your workbench using your favorite browser ...*
 ![](https://dl.dropbox.com/s/zxn0atya6ux0yf3/scr_landing_page_001.png)
 
-**4**) Finalize your installation
-Each atlassian product must be installed after your workbench initialization has finished. This could take time, so don't panic if your browser seems to hang in a loop (especially the db initialization take a lot of time here, that's why we've setup such a long response waiting time inside our nginx-proxy vhost configuration)
+### 4. Finalize your installation
+Each Atlassian product must be installed after your workbench initialization has finished. This could take time, so don't panic if your browser seems to hang in a loop (especially the db initialization take a lot of time here, that's why we've setup such a long response waiting time inside our nginx-proxy vhost configuration)
 
-#### 3.1. Databases
-Please follow the links of each available atlassian product and finalize the installation of the chosen product. Always select "production" installation at start and "external" database source on database configuration page. As database host please set the container-name of the corresponding MySql instance as the table shows below:
+#### 4.1. Databases
+Please follow the links of each available Atlassian product and finalize the installation of the chosen product. Always select "production" installation at start and "external" database source on database configuration page. As database host please set the container-name of the corresponding MySql instance as the table shows below:
 
 | Application             | MySQL Host               | username                   | password            | database            | container path             |
 | :---------------------- |:------------------------ |:-------------------------- |:------------------- |:------------------- |:---------------------------|
@@ -84,7 +84,7 @@ Please follow the links of each available atlassian product and finalize the ins
 
 *take note, that we use default passwords here! all passwords could-and-should be change in the corresponding compose.yml files of each mysql container folder. If you change your passwords/username there, you also have to change the credentials inside our database backup-scripts inside `df-atls-base/scripts/backup_db.sh`*
 
-#### 3.2. EMail Server
+#### 4.2. EMail Server
 We recommend to finalize setup of the mail server configuration for jira and bitbucket (and confluence if you want). In my case i've created gmail account for this workbench and used the smtp/imap external access configuration to handle mail transport for my entire workbench. 
 
 
