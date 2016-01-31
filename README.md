@@ -76,11 +76,11 @@ Each atlassian product must be installed after your workbench initialization has
 #### Databases
 Please follow the links of each available atlassian product and finalize the installation of the chosen product. Always select "production" installation at start and "external" database source on database configuration page. As database host please set the container-name of the corresponding MySql instance as the table shows below:
 
-| Application             | MySQL Host               | username                   | password            | database            | container path              |
-| :---------------------- |:------------------------ |:-------------------------- |:------------------- |:------------------- |:--------------------------- |
-| JIRA                    | df-atls-jira-mysql       | root                       | please-change-me    | jira                | ./df-atls-jira-mysql        |
-| CONFLUENCE              | df-atls-confluence-mysql | root                       | please-change-me    | confluence          | ./df-atls-confluence-mysql  |
-| BITBUCKET               | df-atls-bitbucket-mysql  | root                       | please-change-me    | bitbucket           | ./df-atls-jira-mysql        |
+| Application             | MySQL Host               | username                   | password            | database            | container path             |
+| :---------------------- |:------------------------ |:-------------------------- |:------------------- |:------------------- |:---------------------------|
+| JIRA                    | df-atls-jira-mysql       | root                       | please-change-me    | jira                | ./df-atls-jira-mysql       |
+| CONFLUENCE              | df-atls-confluence-mysql | root                       | please-change-me    | confluence          | ./df-atls-confluence-mysql |
+| BITBUCKET               | df-atls-bitbucket-mysql  | root                       | please-change-me    | bitbucket           | ./df-atls-jira-mysql       |
 
 *take note, that we use default passwords here! all passwords could-and-should be change in the corresponding compose.yml files of each mysql container folder. If you change your passwords/username there, you also have to change the credentials inside our database backup-scripts inside `df-atls-base/scripts/backup_db.sh`*
 
