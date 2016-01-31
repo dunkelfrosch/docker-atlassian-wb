@@ -20,13 +20,13 @@ If you're try to build this workbench on MacOs using docker-machine, please ensu
 ![](https://dl.dropbox.com/s/wp6aejhvyui8h7o/ss_dm_config.png)
 
 ## Installation
-**1**) Checkout this repository
+### 1. Checkout this repository
 
 ```bash
 git clone https://github.com/dunkelfrosch/docker-atlassian-wb.git .
 ```
 
-**2**) setup configuration values
+### 2. Setup workbench configuration values
 We'll use a bunch of configuration values as environment variables during the build inside our core image files. please change this values firstly.
 
 
@@ -55,7 +55,7 @@ We'll use a bunch of configuration values as environment variables during the bu
 
 *as you can see, we'll repeatedly use a lot of same variables on different locations - in future versions we'll try to source them out, using on central location to handle those values more efficiently*
 
-**3**) Build/Start
+### 3. Build/start the workbench
 Use our base control script `./wb_init.sh` to build the complete workbench, or editing this file to pick those application you want to create.   
 
 *take not, that our nginx reverse proxy configuration want's to link all generated containers. if you just create one application image (e.g. **JIRA**) you have to deactivate all other external links inside nginx's `compose.yml`file and also comment out the related lines inside your nginx vhost configuration `./df-atls-nginx-proxy/etc/nginx/sites-available/default.conf`*
@@ -71,9 +71,9 @@ Use our base control script `./wb_init.sh` to build the complete workbench, or e
 ![](https://dl.dropbox.com/s/zxn0atya6ux0yf3/scr_landing_page_001.png)
 
 **4**) Finalize your installation
-Each atlassian product must be installed after your workbench initialization has finished. This could take time, so don't panic if your browser seems to hang in a loop - especially the db initialization take a lot of time here ;)
+Each atlassian product must be installed after your workbench initialization has finished. This could take time, so don't panic if your browser seems to hang in a loop (especially the db initialization take a lot of time here, that's why we've setup such a long response waiting time inside our nginx-proxy vhost configuration)
 
-#### Databases
+#### 3.1. Databases
 Please follow the links of each available atlassian product and finalize the installation of the chosen product. Always select "production" installation at start and "external" database source on database configuration page. As database host please set the container-name of the corresponding MySql instance as the table shows below:
 
 | Application             | MySQL Host               | username                   | password            | database            | container path             |
@@ -84,7 +84,7 @@ Please follow the links of each available atlassian product and finalize the ins
 
 *take note, that we use default passwords here! all passwords could-and-should be change in the corresponding compose.yml files of each mysql container folder. If you change your passwords/username there, you also have to change the credentials inside our database backup-scripts inside `df-atls-base/scripts/backup_db.sh`*
 
-#### EMail Server
+#### 3.2. EMail Server
 We recommend to finalize setup of the mail server configuration for jira and bitbucket (and confluence if you want). In my case i've created gmail account for this workbench and used the smtp/imap external access configuration to handle mail transport for my entire workbench. 
 
 
