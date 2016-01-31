@@ -6,4 +6,4 @@
 
 set -e
 
-docker-compose stop nginx php56_api mongodb jira jira_mysql confluence confluence_mysql bitbucket bitbucket_mysql
+docker-compose stop nginx jira jira_mysql confluence confluence_mysql bitbucket bitbucket_mysql

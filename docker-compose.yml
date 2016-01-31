@@ -97,9 +97,6 @@ nginx:
     file: ./df-atls-base/compose-base.yml
     service: app
 
-  volumes_from:
-    - php56_api
-
   ports:
     - "80:80"
     - "443:443"
