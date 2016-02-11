@@ -1,4 +1,10 @@
-# [bitbucket main container] ------------------------------------------------------------------------------------------
+#
+# [ bitbucket main container ]
+#
+#  - bitbucket app
+#  - bitbucket mysql
+#  - bitbucket mysql-data
+#
 bitbucket:
   container_name: df-atls-bitbucket-app
   build: ./df-atls-bitbucket
@@ -28,7 +34,13 @@ bitbucket_mysql_data:
 
   entrypoint: /bin/echo "data-only container for bitbucket mysql"
 
-# [confluence main container] ------------------------------------------------------------------------------------------
+#
+# [ confluence main container ]
+#
+#  - confluence app
+#  - confluence mysql
+#  - confluence mysql-data
+#
 confluence:
   container_name: df-atls-confluence-app
   build: ./df-atls-confluence
@@ -58,7 +70,13 @@ confluence_mysql_data:
 
   entrypoint: /bin/echo "data-only container for confluence mysql"
 
-# [jira main container] ------------------------------------------------------------------------------------------
+#
+# [ jira main container ]
+#
+#  - jira app
+#  - jira mysql
+#  - jira mysql-data
+#
 jira:
   container_name: df-atls-jira-app
   build: ./df-atls-jira
@@ -88,7 +106,11 @@ jira_mysql_data:
 
   entrypoint: /bin/echo "data-only container for jira mysql"
 
-# [nginx proxy main container] ----------------------------------------------------------------------------------------
+#
+# [ nginx proxy main container ]
+#
+#  - nginx
+#
 nginx:
   container_name: df-atls-nginx-proxy
   build: ./df-atls-nginx-proxy
