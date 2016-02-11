@@ -1,0 +1,172 @@
+##
+## this version of docker-compose can be used up to version 1.6.n of docker-compose (docker 1.10.n+)
+##
+
+version: '2'
+
+services:
+
+  #
+  # [ bitbucket main container ]
+  #
+  #  - bitbucket app
+  #  - bitbucket mysql
+  #  - bitbucket mysql-data
+  #
+  bitbucket:
+    container_name: df-atls-bitbucket-app
+    build:
+      context: ./df-atls-bitbucket
+
+    extends:
+      file: ./df-atls-base/compose-base.yml
+      service: app
+
+    ports:
+      - "7999:7999"
+
+    networks:
+      - atlassian-001
+
+  bitbucket_mysql:
+    container_name: df-atls-bitbucket-mysql
+    build: 
+      context: ./df-atls-bitbucket-mysql
+
+    extends:
+      file: ./df-atls-bitbucket-mysql/compose.yml
+      service: mysql
+
+    networks:
+      - atlassian-001
+
+  bitbucket_mysql_data:
+    container_name: df-atls-bitbucket-mysql-data
+    build: 
+      context: ./df-atls-bitbucket-mysql
+
+    extends:
+      file: ./df-atls-base/compose-base.yml
+      service: app-data
+
+    entrypoint: /bin/echo "data-only container for bitbucket mysql"
+
+  #
+  # [ confluence main container ]
+  #
+  #  - confluence app
+  #  - confluence mysql
+  #  - confluence mysql-data
+  #
+  confluence:
+    container_name: df-atls-confluence-app
+    build: 
+      context: ./df-atls-confluence
+
+    extends:
+      file: ./df-atls-base/compose-base.yml
+      service: app
+
+    networks:
+     - atlassian-001
+
+  confluence_mysql:
+    container_name: df-atls-confluence-mysql
+    build: ./df-atls-confluence-mysql
+
+    extends:
+      file: ./df-atls-confluence-mysql/compose.yml
+      service: mysql
+
+    volumes_from:
+      - confluence_mysql_data:rw
+
+    networks:
+      - atlassian-001
+
+  confluence_mysql_data:
+    container_name: df-atls-confluence-mysql-data
+    build: 
+      context: ./df-atls-confluence-mysql
+
+    extends:
+      file: ./df-atls-base/compose-base.yml
+      service: app-data
+
+    entrypoint: /bin/echo "data-only container for confluence mysql"
+
+  #
+  # [ jira main container ]
+  #
+  #  - jira app
+  #  - jira mysql
+  #  - jira mysql-data
+  #
+  jira:
+    container_name: df-atls-jira-app
+    build: 
+      context: ./df-atls-jira
+
+    extends:
+      file: ./df-atls-base/compose-base.yml
+      service: app
+
+    networks:
+      - atlassian-001
+
+  jira_mysql:
+    container_name: df-atls-jira-mysql
+    build: 
+      context: ./df-atls-jira-mysql
+
+    extends:
+      file: ./df-atls-jira-mysql/compose.yml
+      service: mysql
+
+    volumes_from:
+      - jira_mysql_data:rw
+
+    networks:
+      - atlassian-001
+
+  jira_mysql_data:
+    container_name: df-atls-jira-mysql-data
+    build: 
+      context: ./df-atls-jira-mysql
+
+    extends:
+      file: ./df-atls-base/compose-base.yml
+      service: app-data
+
+    entrypoint: /bin/echo "data-only container for jira mysql"
+
+  #
+  # [ nginx proxy main container ]
+  #
+  #  - nginx
+  #
+  nginx:
+    container_name: df-atls-nginx-proxy
+    build: 
+      context: ./df-atls-nginx-proxy
+
+    extends:
+      file: ./df-atls-base/compose-base.yml
+      service: app
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    networks:
+      - atlassian-001
+      - proxy-001
+
+#
+# [ networks definition for atlassian and our (other) proxy services ]
+#
+networks:
+  atlassian-001:
+    driver: bridge
+  proxy-001:
+    driver: bridge
