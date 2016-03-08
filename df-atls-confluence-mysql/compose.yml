@@ -8,14 +8,18 @@
 #
 
 # [confluence mysql main container] -----------------------------------------------------------------------------------
-mysql:
-  container_name: df-atls-confluence-mysql
-  build: .
-  extends:
-    file: ../df-atls-base/compose-base.yml
-    service: app
+version: '2'
+services:
+  mysql:
+    container_name: df-atls-confluence-mysql
+    build:
+      context: .
 
-  environment:
-    MYSQL_DATABASE: 'confluence'
-    MYSQL_ROOT_PASSWORD: 'please-change-me'
+    extends:
+      file: ../df-atls-base/compose-base.yml
+      service: app
+
+    environment:
+      MYSQL_DATABASE: 'confluence'
+      MYSQL_ROOT_PASSWORD: 'please-change-me'
 

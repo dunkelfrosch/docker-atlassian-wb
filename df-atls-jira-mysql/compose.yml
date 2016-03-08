@@ -8,13 +8,17 @@
 #
 
 # [jira mysql main container] -----------------------------------------------------------------------------------------
-mysql:
-  container_name: df-atls-jira-mysql
-  build: .
-  extends:
-    file: ../df-atls-base/compose-base.yml
-    service: app
+version: '2'
+services:
+  mysql:
+    container_name: df-atls-jira-mysql
+    build:
+      context: .
 
-  environment:
-    MYSQL_DATABASE: 'jira'
-    MYSQL_ROOT_PASSWORD: 'please-change-me'
+    extends:
+      file: ../df-atls-base/compose-base.yml
+      service: app
+
+    environment:
+      MYSQL_DATABASE: 'jira'
+      MYSQL_ROOT_PASSWORD: 'please-change-me'

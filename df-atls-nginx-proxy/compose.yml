@@ -8,15 +8,18 @@
 #
 
 # [nginx proxy main container] ----------------------------------------------------------------------------------------
-nginx:
-  container_name: df-atls-nginx-proxy
-  build: .
+version: '2'
+services:
+  nginx:
+    container_name: df-atls-nginx-proxy
+    build:
+      context: .
 
-  extends:
-    file: ../df-atls-base/compose-base.yml
-    service: app
+    extends:
+      file: ../df-atls-base/compose-base.yml
+      service: app
 
-  ports:
-    - "80:80"
-    - "443:443"
+    ports:
+      - "80:80"
+      - "443:443"
 
