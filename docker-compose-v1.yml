@@ -1,0 +1,124 @@
+#
+# [ bitbucket main container ]
+#
+#  - bitbucket app
+#  - bitbucket mysql
+#  - bitbucket mysql-data
+#
+bitbucket:
+  container_name: df-atls-bitbucket-app
+  build: ./df-atls-bitbucket
+
+  extends:
+    file: ./df-atls-base/compose-base.yml
+    service: app
+
+  ports:
+    - "7999:7999"
+
+bitbucket_mysql:
+  container_name: df-atls-bitbucket-mysql
+  build: ./df-atls-bitbucket-mysql
+
+  extends:
+    file: ./df-atls-bitbucket-mysql/compose.yml
+    service: mysql
+
+bitbucket_mysql_data:
+  container_name: df-atls-bitbucket-mysql-data
+  build: ./df-atls-bitbucket-mysql
+
+  extends:
+    file: ./df-atls-base/compose-base.yml
+    service: app-data
+
+  entrypoint: /bin/echo "data-only container for bitbucket mysql"
+
+#
+# [ confluence main container ]
+#
+#  - confluence app
+#  - confluence mysql
+#  - confluence mysql-data
+#
+confluence:
+  container_name: df-atls-confluence-app
+  build: ./df-atls-confluence
+
+  extends:
+    file: ./df-atls-base/compose-base.yml
+    service: app
+
+confluence_mysql:
+  container_name: df-atls-confluence-mysql
+  build: ./df-atls-confluence-mysql
+
+  extends:
+    file: ./df-atls-confluence-mysql/compose.yml
+    service: mysql
+
+  volumes_from:
+    - confluence_mysql_data:rw
+
+confluence_mysql_data:
+  container_name: df-atls-confluence-mysql-data
+  build: ./df-atls-confluence-mysql
+
+  extends:
+    file: ./df-atls-base/compose-base.yml
+    service: app-data
+
+  entrypoint: /bin/echo "data-only container for confluence mysql"
+
+#
+# [ jira main container ]
+#
+#  - jira app
+#  - jira mysql
+#  - jira mysql-data
+#
+jira:
+  container_name: df-atls-jira-app
+  build: ./df-atls-jira
+
+  extends:
+    file: ./df-atls-base/compose-base.yml
+    service: app
+
+jira_mysql:
+  container_name: df-atls-jira-mysql
+  build: ./df-atls-jira-mysql
+
+  extends:
+    file: ./df-atls-jira-mysql/compose.yml
+    service: mysql
+
+  volumes_from:
+    - jira_mysql_data:rw
+
+jira_mysql_data:
+  container_name: df-atls-jira-mysql-data
+  build: ./df-atls-jira-mysql
+
+  extends:
+    file: ./df-atls-base/compose-base.yml
+    service: app-data
+
+  entrypoint: /bin/echo "data-only container for jira mysql"
+
+#
+# [ nginx proxy main container ]
+#
+#  - nginx
+#
+nginx:
+  container_name: df-atls-nginx-proxy
+  build: ./df-atls-nginx-proxy
+
+  extends:
+    file: ./df-atls-base/compose-base.yml
+    service: app
+
+  ports:
+    - "80:80"
+    - "443:443"
