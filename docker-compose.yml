@@ -13,31 +13,47 @@ services:
   #  - bitbucket mysql-data
   #
   bitbucket:
+    # -- sample cpu configuration for 8 core linux system (using cpu 1-4, 75% max payload, priority 640)
+    # cpu_shares: 640
+    # cpu_quota: 75000
+    # cpuset: '0-3'
     container_name: df-atls-bitbucket-app
     build:
       context: ./df-atls-bitbucket
+
+    depends_on:
+      - bitbucket_mysql
 
     extends:
       file: ./df-atls-base/compose-base.yml
       service: app
 
+    # open gates for stash ssh port 7999
     ports:
       - "7999:7999"
 
     networks:
+      - atlassian
       - default
 
   bitbucket_mysql:
+    # -- sample cpu configuration for 8 core linux system (using cpu 4-5, 33% max payload, priority 256)
+    # cpu_shares: 256
+    # cpu_quota: 33000
+    # cpuset: '3,4'
     container_name: df-atls-bitbucket-mysql
     build: 
       context: ./df-atls-bitbucket-mysql
+
+    depends_on:
+      - bitbucket_mysql_data
 
     extends:
       file: ./df-atls-bitbucket-mysql/compose.yml
       service: mysql
 
     networks:
-      - default
+      - atlassian
 
   bitbucket_mysql_data:
     container_name: df-atls-bitbucket-mysql-data
@@ -46,7 +62,7 @@ services:
 
     extends:
       file: ./df-atls-base/compose-base.yml
-      service: app-data
+      service: app_data
 
     entrypoint: /bin/echo "data-only container for bitbucket mysql"
 
@@ -58,20 +74,35 @@ services:
   #  - confluence mysql-data
   #
   confluence:
+    # -- sample cpu configuration for 8 core linux system (using cpu 1-4, 95% max payload, priority 896)
+    # cpu_shares: 896
+    # cpu_quota: 95000
+    # cpuset: '0-3'
     container_name: df-atls-confluence-app
     build: 
       context: ./df-atls-confluence
+
+    depends_on:
+      - confluence_mysql
 
     extends:
       file: ./df-atls-base/compose-base.yml
       service: app
 
     networks:
+     - atlassian
      - default
 
   confluence_mysql:
+    # -- sample cpu configuration for 8 core linux system (using cpu 4-5, 33% max payload, priority 256)
+    # cpu_shares: 256
+    # cpu_quota: 33000
+    # cpuset: '3,4'
     container_name: df-atls-confluence-mysql
     build: ./df-atls-confluence-mysql
+
+    depends_on:
+      - confluence_mysql_data
 
     extends:
       file: ./df-atls-confluence-mysql/compose.yml
@@ -81,7 +112,7 @@ services:
       - confluence_mysql_data:rw
 
     networks:
-      - default
+      - atlassian
 
   confluence_mysql_data:
     container_name: df-atls-confluence-mysql-data
@@ -90,7 +121,7 @@ services:
 
     extends:
       file: ./df-atls-base/compose-base.yml
-      service: app-data
+      service: app_data
 
     entrypoint: /bin/echo "data-only container for confluence mysql"
 
@@ -102,21 +133,36 @@ services:
   #  - jira mysql-data
   #
   jira:
+    # -- sample cpu configuration for 8 core linux system (using cpu 1-4, 85% max payload, priority 768)
+    # cpu_shares: 768
+    # cpu_quota: 85000
+    # cpuset: '0-3'
     container_name: df-atls-jira-app
     build: 
       context: ./df-atls-jira
+
+    depends_on:
+      - jira_mysql
 
     extends:
       file: ./df-atls-base/compose-base.yml
       service: app
 
     networks:
+      - atlassian
       - default
 
   jira_mysql:
+    # -- sample cpu configuration for 8 core linux system (using cpu 4-5, 33% max payload, priority 256)
+    # cpu_shares: 256
+    # cpu_quota: 33000
+    # cpuset: '3,4'
     container_name: df-atls-jira-mysql
     build: 
       context: ./df-atls-jira-mysql
+
+    depends_on:
+      - jira_mysql_data
 
     extends:
       file: ./df-atls-jira-mysql/compose.yml
@@ -126,7 +172,7 @@ services:
       - jira_mysql_data:rw
 
     networks:
-      - default
+      - atlassian
 
   jira_mysql_data:
     container_name: df-atls-jira-mysql-data
@@ -135,7 +181,7 @@ services:
 
     extends:
       file: ./df-atls-base/compose-base.yml
-      service: app-data
+      service: app_data
 
     entrypoint: /bin/echo "data-only container for jira mysql"
 
@@ -145,6 +191,10 @@ services:
   #  - nginx
   #
   nginx:
+    # -- sample cpu configuration for 8 core linux system (using cpu #8, 85% max payload, priority 512)
+    # cpu_shares: 512
+    # cpu_quota: 85000
+    # cpuset: '7'
     container_name: df-atls-nginx-proxy
     build: 
       context: ./df-atls-nginx-proxy
@@ -166,5 +216,5 @@ services:
 networks:
   default:
     driver: bridge
-  outside:
-    external: true
+  atlassian:
+    driver: bridge
