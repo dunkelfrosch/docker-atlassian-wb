@@ -1,20 +1,20 @@
 #
 # BUILD    : DF/[ATLASSIAN][JIRA][MYSQL]
 # OS/CORE  : debian:8
-# SERVICES : mysql 5.6.n
+# SERVICES : mysql 5.7.n
 #
-# VERSION 1.0.0
+# VERSION 1.0.1
 #
 
-FROM mysql:5.6
+FROM mysql:5.7
 
 MAINTAINER Patrick Paechnatz <patrick.paechnatz@gmail.com>
 LABEL com.container.vendor="dunkelfrosch impersonate" \
       com.container.service="atlassian/jira/mysql" \
       com.container.priority="1" \
-      com.container.project="jira" \
-      img.version="1.0.0" \
-      description="our main jira atlassian mysql container"
+      com.container.project="workbench/atlassian" \
+      img.version="1.0.1" \
+      img.description="our main jira atlassian mysql container"
 
 ENV TERM xterm
 ENV LC_ALL C.UTF-8
@@ -27,12 +27,13 @@ USER root
 RUN mkdir -p /opt/docker \
              /etc/mysql/conf.d
 
-ADD /opt/docker/* /opt/docker/
+# copy docker script debian cleanup file to docker image
+ADD https://raw.githubusercontent.com/dunkelfrosch/docker-bash/master/docker_cleanup_debian.sh /opt/docker/
 
 # x-layer 1: package manager related processor
 RUN set -e \
     && apt-get update -qq >/dev/null 2>&1 \
-    && apt-get install -qq -y --no-install-recommends mc >/dev/null 2>&1
+    && apt-get install -qq -y --no-install-recommends mc ntp sysstat >/dev/null 2>&1
 
 # x-layer 2: system core setup related processor
 RUN set -e \
@@ -44,12 +45,15 @@ RUN { \
       echo '[mysqld]'; \
       echo 'character-set-server=utf8'; \
       echo 'collation-server=utf8_bin'; \
+      echo 'innodb_log_file_size=256M'; \
+      echo 'innodb_buffer_pool_size=64M'; \
+      echo 'max_allowed_packet=48M'; \
       echo '[client]'; \
       echo 'default-character-set=utf8'; \
     } > /etc/mysql/conf.d/charset.cnf
 
 # x-layer 4: build script cleanup related processor
 RUN set -e \
-    && sh /opt/docker/cleanup.sh
+    && sh /opt/docker/docker_cleanup_debian.sh
 
 VOLUME ["/var/lib/mysql"]
