@@ -13,20 +13,15 @@ services:
   #  - bitbucket mysql-data
   #
   bitbucket:
-    # -- sample cpu configuration for 8 core linux system (using cpu 1-4, 75% max payload, priority 640)
-    # cpu_shares: 640
-    # cpu_quota: 75000
-    # cpuset: '0-3'
-    container_name: df-atls-bitbucket-app
-    build:
-      context: ./df-atls-bitbucket
 
     depends_on:
       - bitbucket_mysql
 
+    container_name: df-atls-bitbucket-app
+
     extends:
-      file: ./df-atls-base/compose-base.yml
-      service: app
+      file: ./df-atls-bitbucket/_compose.yml
+      service: bitbucket_base
 
     # open gates for stash ssh port 7999
     ports:
@@ -37,32 +32,34 @@ services:
       - default
 
   bitbucket_mysql:
-    # -- sample cpu configuration for 8 core linux system (using cpu 4-5, 33% max payload, priority 256)
-    # cpu_shares: 256
-    # cpu_quota: 33000
-    # cpuset: '3,4'
-    container_name: df-atls-bitbucket-mysql
-    build: 
-      context: ./df-atls-bitbucket-mysql
 
     depends_on:
       - bitbucket_mysql_data
 
+    container_name: df-atls-bitbucket-mysql
+
     extends:
-      file: ./df-atls-bitbucket-mysql/compose.yml
-      service: mysql
+      file: ./df-atls-bitbucket-mysql/_compose.yml
+      service: mysql_base
+
+    volumes_from:
+      - bitbucket_mysql_data:rw
 
     networks:
       - atlassian
 
   bitbucket_mysql_data:
+
+    restart: 'no'
     container_name: df-atls-bitbucket-mysql-data
-    build: 
-      context: ./df-atls-bitbucket-mysql
 
     extends:
-      file: ./df-atls-base/compose-base.yml
-      service: app_data
+      file: ./df-atls-bitbucket-mysql/_compose.yml
+      service: mysql_base
+
+    privileged: false
+    stdin_open: false
+    tty: false
 
     entrypoint: /bin/echo "data-only container for bitbucket mysql"
 
@@ -74,39 +71,30 @@ services:
   #  - confluence mysql-data
   #
   confluence:
-    # -- sample cpu configuration for 8 core linux system (using cpu 1-4, 95% max payload, priority 896)
-    # cpu_shares: 896
-    # cpu_quota: 95000
-    # cpuset: '0-3'
-    container_name: df-atls-confluence-app
-    build: 
-      context: ./df-atls-confluence
 
     depends_on:
       - confluence_mysql
 
+    container_name: df-atls-confluence-app
+
     extends:
-      file: ./df-atls-base/compose-base.yml
-      service: app
+      file: ./df-atls-confluence/_compose.yml
+      service: confluence_base
 
     networks:
      - atlassian
      - default
 
   confluence_mysql:
-    # -- sample cpu configuration for 8 core linux system (using cpu 4-5, 33% max payload, priority 256)
-    # cpu_shares: 256
-    # cpu_quota: 33000
-    # cpuset: '3,4'
-    container_name: df-atls-confluence-mysql
-    build: ./df-atls-confluence-mysql
 
     depends_on:
       - confluence_mysql_data
 
+    container_name: df-atls-confluence-mysql
+
     extends:
-      file: ./df-atls-confluence-mysql/compose.yml
-      service: mysql
+      file: ./df-atls-confluence-mysql/_compose.yml
+      service: mysql_base
 
     volumes_from:
       - confluence_mysql_data:rw
@@ -115,13 +103,17 @@ services:
       - atlassian
 
   confluence_mysql_data:
+
+    restart: 'no'
     container_name: df-atls-confluence-mysql-data
-    build: 
-      context: ./df-atls-confluence-mysql
 
     extends:
-      file: ./df-atls-base/compose-base.yml
-      service: app_data
+      file: ./df-atls-confluence-mysql/_compose.yml
+      service: mysql_base
+
+    privileged: false
+    stdin_open: false
+    tty: false
 
     entrypoint: /bin/echo "data-only container for confluence mysql"
 
@@ -133,40 +125,30 @@ services:
   #  - jira mysql-data
   #
   jira:
-    # -- sample cpu configuration for 8 core linux system (using cpu 1-4, 85% max payload, priority 768)
-    # cpu_shares: 768
-    # cpu_quota: 85000
-    # cpuset: '0-3'
-    container_name: df-atls-jira-app
-    build: 
-      context: ./df-atls-jira
 
     depends_on:
       - jira_mysql
 
+    container_name: df-atls-jira-app
+
     extends:
-      file: ./df-atls-base/compose-base.yml
-      service: app
+      file: ./df-atls-jira/_compose.yml
+      service: jira_base
 
     networks:
       - atlassian
       - default
 
   jira_mysql:
-    # -- sample cpu configuration for 8 core linux system (using cpu 4-5, 33% max payload, priority 256)
-    # cpu_shares: 256
-    # cpu_quota: 33000
-    # cpuset: '3,4'
-    container_name: df-atls-jira-mysql
-    build: 
-      context: ./df-atls-jira-mysql
 
     depends_on:
       - jira_mysql_data
 
+    container_name: df-atls-jira-mysql
+
     extends:
-      file: ./df-atls-jira-mysql/compose.yml
-      service: mysql
+      file: ./df-atls-jira-mysql/_compose.yml
+      service: mysql_base
 
     volumes_from:
       - jira_mysql_data:rw
@@ -175,13 +157,17 @@ services:
       - atlassian
 
   jira_mysql_data:
+
+    restart: 'no'
     container_name: df-atls-jira-mysql-data
-    build: 
-      context: ./df-atls-jira-mysql
 
     extends:
-      file: ./df-atls-base/compose-base.yml
-      service: app_data
+      file: ./df-atls-jira-mysql/_compose.yml
+      service: mysql_base
+
+    privileged: false
+    stdin_open: false
+    tty: false
 
     entrypoint: /bin/echo "data-only container for jira mysql"
 
@@ -191,21 +177,17 @@ services:
   #  - nginx
   #
   nginx:
-    # -- sample cpu configuration for 8 core linux system (using cpu #8, 85% max payload, priority 512)
-    # cpu_shares: 512
-    # cpu_quota: 85000
-    # cpuset: '7'
+
+    depends_on:
+      - bitbucket
+      - confluence
+      - jira
+
     container_name: df-atls-nginx-proxy
-    build: 
-      context: ./df-atls-nginx-proxy
 
     extends:
-      file: ./df-atls-base/compose-base.yml
-      service: app
-
-    ports:
-      - "80:80"
-      - "443:443"
+      file: ./df-atls-nginx-proxy/_compose.yml
+      service: nginx_base
 
     networks:
       - default
