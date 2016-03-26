@@ -1,0 +1,36 @@
+##
+## this version of docker-compose can be used up to version 1.6.n of docker-compose (docker 1.10.n+)
+##
+## this file will be hold all docker-compose related service specific configurations like cpu/memory
+## thresholds, build_args/persistent environment variables and detailed host block config definitions.
+
+version: '2'
+services:
+
+  #
+  # [ mysql base service container for confluence ]
+  #
+  mysql_base:
+
+    # -- sample cpu configuration for 8 core linux system (using cpu 4-5, 33% max payload, relative cpu weight of 256)
+    # cpu_shares: 256
+    # cpu_quota: 33000
+    # cpuset: '3,4'
+    # mem_limit: 512m
+    # memswap_limit: 1024m
+
+    domainname: $CFG_DOMAIN_INTERNAL
+    hostname: mysql.confluence
+
+    environment:
+      # mysql related configuration issues
+      MYSQL_DATABASE: 'confluence'
+      MYSQL_ROOT_PASSWORD: 'please-change-me'
+
+    restart: 'always'
+    privileged: false
+    stdin_open: true
+    tty: true
+
+    build:
+      context: .
