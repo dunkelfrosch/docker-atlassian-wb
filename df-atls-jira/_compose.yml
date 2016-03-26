@@ -1,0 +1,36 @@
+##
+## this version of docker-compose can be used up to version 1.6.n of docker-compose (docker 1.10.n+)
+##
+## this file will be hold all docker-compose related service specific configurations like cpu/memory
+## thresholds, build_args/persistent environment variables and detailed host block config definitions.
+
+version: '2'
+services:
+
+  #
+  # [ jira base service container ]
+  #
+  jira_base:
+
+    # -- sample cpu configuration for 8 core linux system (using cpu 1-4, 85% max payload, relative cpu weight 768)
+    # cpu_shares: 768
+    # cpu_quota: 85000
+    # cpuset: '0-3'
+    # mem_limit: 512m
+    # memswap_limit: 1024m
+
+    domainname: $CFG_DOMAIN_INTERNAL
+    hostname: jira
+
+    restart: 'no'
+    privileged: true
+    stdin_open: true
+    tty: true
+
+    build:
+      context: .
+      args:
+        - CFG_TARGET_URI=$CFG_URI_JIRA
+        - CFG_PROXY_HOST=$CFG_DOMAIN_PUBLIC
+        - CFG_PROXY_SCHEME=$CFG_DOMAIN_PUBLIC_PROTOCOL
+        - CFG_PROXY_PORT=$CFG_DOMAIN_PUBLIC_PORT
