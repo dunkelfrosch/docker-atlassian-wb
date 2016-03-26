@@ -7,7 +7,7 @@ This repository provides the latest version of Atlassians collaboration software
 
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
-[![System Version](https://img.shields.io/badge/version-1.0.2%20beta-blue.svg)](VERSION)
+[![System Version](https://img.shields.io/badge/version-1.0.3%20beta-blue.svg)](VERSION)
 
 ## Preparation
 For the complete build of all images and the failure-free running of all applications, we recommend at least a server/vm memory availability of **4GB**+ ram. We also recommend the [latest Docker version](https://github.com/docker/docker/blob/master/CHANGELOG.md). For simple system integration and supervision, we suggest [Docker Compose](https://docs.docker.com/compose/install/). If you're using MacOS or Windows as a host-operating system, you may take advantage of [Docker Machine](https://www.docker.com/docker-machine) for Docker's VM management. Confluence requires a relational database like MySQL or PostgreSQL, so we'll provide a specific docker-compose configuration file to showcase both a Confluence-MySQL link and a data-container feature configuration. Use the installation guides of provided links below to comply your docker preparation process.
