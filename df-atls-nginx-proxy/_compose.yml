@@ -1,0 +1,46 @@
+##
+## this version of docker-compose can be used up to version 1.6.n of docker-compose (docker 1.10.n+)
+##
+## this file will be hold all docker-compose related service specific configurations like cpu/memory
+## thresholds, build_args/persistent environment variables and detailed host block config definitions.
+
+version: '2'
+services:
+
+  #
+  # [ nginx base service container for our atlassian workbench ]
+  #
+  nginx_base:
+
+    # -- sample cpu configuration for 8 core linux system (using cpu #8, 85% max payload, relative cpu weight 512)
+    # cpu_shares: 512
+    # cpu_quota: 85000
+    # cpuset: '7'
+    # mem_limit: 512m
+    # memswap_limit: 1024m
+
+    domainname: $CFG_DOMAIN_INTERNAL
+    hostname: nginx
+
+    environment:
+      TERM: 'xterm'
+      LC_ALL: 'C.UTF-8'
+      DEBIAN_FRONTEND: 'noninteractive'
+      TIMEZONE: 'Europe/Berlin'
+
+    restart: 'no'
+    privileged: true
+    stdin_open: true
+    tty: true
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    build:
+      context: .
+      args:
+        - NGINX_URI_JIRA=$CFG_URI_JIRA
+        - NGINX_URI_CONFLUENCE=$CFG_URI_CONFLUENCE
+        - NGINX_URI_BITBUCKET=$CFG_URI_BITBUCKET
+        - NGINX_DOMAIN_PUBLIC=$CFG_DOMAIN_PUBLIC
