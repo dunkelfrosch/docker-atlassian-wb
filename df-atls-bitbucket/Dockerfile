@@ -3,7 +3,7 @@
 # OS/CORE  : java:8
 # SERVICES : -
 #
-# VERSION 1.0.0
+# VERSION 1.0.1
 #
 
 FROM dunkelfrosch/bitbucket:4.1.0
@@ -13,19 +13,19 @@ LABEL com.container.vendor="dunkelfrosch inc." \
       com.container.service="atlassian/bitbucket" \
       com.container.priority="1" \
       com.container.project="workbench/atlassian" \
-      img.version="1.0.0" \
-      img.description="our confluence atlassian workbench container"
+      img.version="1.0.1" \
+      img.description="our bitbucket atlassian workbench container"
+
+# Setup parametric build arguments
+ARG CFG_TARGET_URI
+ARG CFG_PROXY_HOST
+ARG CFG_PROXY_SCHEME
+ARG CFG_PROXY_PORT
 
 # Setup application install environment variables
 ENV BITBUCKET_HOME          /var/atlassian/application-data/bitbucket
 ENV BITBUCKET_INSTALL_DIR   /opt/atlassian/bitbucket
 ENV _RUNJAVA                "/usr/bin/java"
-
-# Setup additional application config environment variables
-ENV CFG_TARGET_URI          "/go/to/bitbucket"
-ENV CFG_PROXY_HOST          "dunkelfrosch.com"
-ENV CFG_PROXY_SCHEME        "https"
-ENV CFG_PROXY_PORT          443
 
 # Use the default unprivileged account. This could be considered bad practice
 # on systems where multiple processes end up being executed by 'daemon' but
