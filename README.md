@@ -7,7 +7,7 @@ This repository provides the latest version of Atlassians collaboration software
 
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE)
-[![System Version](https://img.shields.io/badge/version-1.0.3%20beta-blue.svg)](VERSION)
+[![System Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](VERSION)
 
 ## Preparation
 For the complete build of all images and the failure-free running of all applications, we recommend at least a server/vm memory availability of **4GB**+ ram. We also recommend the [latest Docker version](https://github.com/docker/docker/blob/master/CHANGELOG.md). For simple system integration and supervision, we suggest [Docker Compose](https://docs.docker.com/compose/install/). If you're using MacOS or Windows as a host-operating system, you may take advantage of [Docker Machine](https://www.docker.com/docker-machine) for Docker's VM management. Confluence requires a relational database like MySQL or PostgreSQL, so we'll provide a specific docker-compose configuration file to showcase both a Confluence-MySQL link and a data-container feature configuration. Use the installation guides of provided links below to comply your docker preparation process.
@@ -27,33 +27,21 @@ git clone https://github.com/dunkelfrosch/docker-atlassian-wb.git .
 ```
 
 ### 2. Setup workbench configuration values
-We'll be using a bunch of configuration values as environmental variables while building the inside of our core image files. First and foremost, please change these values.
+We'll be using a bunch of configuration values by environmental variables while building the inside of our service images.s. 
+First and foremost, please change these values for your need.
 
 
-| Folder                  | File          | Variable                   | Value               | Description               |
-| :---------------------- |:------------- |:-------------------------- |:------------------- |:--------------------------|
-| ./df-atls-nginx-proxy   | Dockerfile    | `CFG_NGINX_FQN_HOSTNAME`   | dunkelfrosch.com    | your fqn hostname         |
-|                         |               | `CFG_NGINX_URI_JIRA`       | /go/to/jira         | target url to jira        |
-|                         |               | `CFG_NGINX_URI_CONFLUENCE` | /go/to/confluence   | target url to confluence  |
-|                         |               | `CFG_NGINX_URI_BITBUCKET`  | /go/to/bitbucket    | target url to bitbucket   |
-|                         |               | `TIMEZONE`                 | Europe/Berlin       | your server base timezone |
-|                         |               |                            |                     |                           |
-| ./df-atls-jira          | Dockerfile    | `CFG_TARGET_URI`           | /go/to/jira         | internal application url  |
-|                         |               | `CFG_PROXY_HOST`           | dunkelfrosch.com    | your proxy target host    |
-|                         |               | `CFG_PROXY_SCHEME`         | https               | your proxy http protocol  |
-|                         |               | `CFG_PROXY_PORT`           | 443                 | your proxy target port    |
-|                         |               |                            |                     |                           |
-| ./df-atls-confluence    | Dockerfile    | `CFG_TARGET_URI`           | /go/to/confluence   | internal application url  |
-|                         |               | `CFG_PROXY_HOST`           | dunkelfrosch.com    | your proxy target host    |
-|                         |               | `CFG_PROXY_SCHEME`         | https               | your proxy http protocol  |
-|                         |               | `CFG_PROXY_PORT`           | 443                 | your proxy target port    |
-|                         |               |                            |                     |                           |
-| ./df-atls-bitbucket     | Dockerfile    | `CFG_TARGET_URI`           | /go/to/bitbucket    | internal application url  |
-|                         |               | `CFG_PROXY_HOST`           | dunkelfrosch.com    | your proxy target host    |
-|                         |               | `CFG_PROXY_SCHEME`         | https               | your proxy http protocol  |
-|                         |               | `CFG_PROXY_PORT`           | 443                 | your proxy target port    |
+| Folder    | File          | Variable                     | Default Value           | Description                      |
+| :-------- |:------------- |:---------------------------- |:----------------------- |:---------------------------------|
+| ./        | wb_config.sh  | `CFG_DOMAIN_INTERNAL`        | df.atlassian.workbench  | your container internal hostname |
+|           |               | `CFG_DOMAIN_PUBLIC`          | dunkelfrosch.net        | your public nginx hostname       |
+|           |               | `CFG_DOMAIN_PUBLIC_PROTOCOL` | https                   | your public nginx used protocol  |
+|           |               | `CFG_DOMAIN_PUBLIC_PORT`     | 443                     | your public nginx proxy port     |
+|           |               | `CFG_URI_JIRA`               | /go/to/jira             | uri to your jira service         |
+|           |               | `CFG_URI_CONFLUENCE`         | /go/to/confluence       | uri to your confluence service   |
+|           |               | `CFG_URI_BITBUCKET`          | /go/to/bitbucket        | uri to your bitbucket service    |
 
-*As you can see, we'll repeatedly use a lot of the same variables on different locations - in future versions, we'll try to source them out, using one central location to handle these values more efficiently.*
+*up for version 1.0.3 of this workbench sample we've refactor the old multiple configuration base into a single export based config storage.*
 
 ### 3. Build/start the workbench
 Use our base control script `./wb_init.sh` to build the complete workbench; for editing this file, pick the application you want to create.    
