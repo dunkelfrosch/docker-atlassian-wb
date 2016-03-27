@@ -7,5 +7,5 @@
 #
 
 set -e
-chmod +x *.sh
-find ./ -name 'console' -or -name '*.sh' | xargs chmod +x
+
+find ./ -name '*.sh' | xargs chmod +x
