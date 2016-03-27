@@ -4,7 +4,7 @@ All notable changes of the Docker Atlassian Workbench release series are documen
 
 _This Docker Atlassian Workbench changeLog documentation start with version 1.0.0 (2015-12-30)_
 
-## [1.0.3], 2016-03-26:
+## [1.0.3], 2016-03-27:
 _current_
 
 ### Fixed
@@ -22,6 +22,7 @@ _current_
 ### Removed
 
 * old sub compose files for service and data-container's
+* old ENV setup inside mysql service container
 * old local cleanup script
 
 ### Changed
@@ -29,6 +30,7 @@ _current_
 * change/extend current documentation
 * base host/container cpu/memory config
 * upgrade nginx to version 1.9.9
+* upgrade mysql to version 5.7.n in jira db container
 
 ## [1.0.2], 2016-03-07:
 
