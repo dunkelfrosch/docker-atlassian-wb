@@ -8,4 +8,4 @@ set -e
 
 eval $(./wb_config.sh)
 
-docker-compose stop nginx jira jira_mysql confluence confluence_mysql bitbucket bitbucket_mysql
+docker-compose stop
