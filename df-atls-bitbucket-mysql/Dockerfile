@@ -16,13 +16,6 @@ LABEL com.container.vendor="dunkelfrosch impersonate" \
       img.version="1.0.1" \
       img.description="our main bitbucket atlassian mysql container"
 
-ENV TERM xterm
-ENV LC_ALL C.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
-ENV TIMEZONE Europe/Berlin
-
-USER root
-
 # prepare main remote docker helper script path + additions
 RUN mkdir -p /opt/docker \
              /etc/mysql/conf.d
