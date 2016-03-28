@@ -16,13 +16,6 @@ LABEL com.container.vendor="dunkelfrosch impersonate" \
       img.version="1.0.1" \
       img.description="our main jira atlassian mysql container"
 
-ENV TERM xterm
-ENV LC_ALL C.UTF-8
-ENV DEBIAN_FRONTEND noninteractive
-ENV TIMEZONE Europe/Berlin
-
-USER root
-
 # prepare main remote docker helper script path + additions
 RUN mkdir -p /opt/docker \
              /etc/mysql/conf.d
@@ -45,9 +38,9 @@ RUN { \
       echo '[mysqld]'; \
       echo 'character-set-server=utf8'; \
       echo 'collation-server=utf8_bin'; \
-      echo 'innodb_log_file_size=256M'; \
+      echo 'innodb_log_file_size=128M'; \
       echo 'innodb_buffer_pool_size=64M'; \
-      echo 'max_allowed_packet=48M'; \
+      echo 'max_allowed_packet=32M'; \
       echo '[client]'; \
       echo 'default-character-set=utf8'; \
     } > /etc/mysql/conf.d/charset.cnf
