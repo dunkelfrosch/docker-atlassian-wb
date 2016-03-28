@@ -23,7 +23,12 @@ services:
     hostname: mysql.bitbucket
 
     environment:
-      # mysql related configuration issues
+      # container based os configuration
+      TERM: xterm
+      LC_ALL: C.UTF-8
+      DEBIAN_FRONTEND: noninteractive
+      TIMEZONE: Europe/Berlin
+      # mysql related configuration
       MYSQL_DATABASE: 'bitbucket'
       MYSQL_ROOT_PASSWORD: 'please-change-me'
 
