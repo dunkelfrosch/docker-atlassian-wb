@@ -21,6 +21,7 @@ _current_
 
 ### Removed
 
+* obsolete parts of our documentation
 * old sub compose files for service and data-container's
 * old ENV setup inside mysql service container
 * old local cleanup script
