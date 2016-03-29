@@ -46,16 +46,12 @@ First and foremost, please change these values for your need.
 ### 3. Build/start the workbench
 Use our base control script `./wb_init.sh` to build the complete workbench; for editing this file, pick the application you want to create.    
 
-*Take note, that our nginx reverse proxy configuration wants to link all generated containers. if you just create one application image (e.g. **JIRA**) you have to deactivate all other external links inside nginx's `compose.yml` file and also comment out the related lines inside your nginx vhost configuration `./df-atls-nginx-proxy/etc/nginx/sites-available/default.conf`*
-![](https://dl.dropbox.com/s/31ezk7qlf4qwetf/scr_nginx_deactivate_lnks.png)
-
-*After your successful build you may have the following images available on your local host*
-![](https://dl.dropbox.com/s/1xn989m3tfn0djd/scr_build_img_rslt.png)
+*Take note, that our nginx reverse proxy configuration wants to link all generated containers. if you just create one application image (e.g. **JIRA**) or your testing system wont have enough capacity to handle 3 java web-applications (in case of use docker-machine as base vm on mac, it will be hard to handle all 3 apps) you have to deactivate all other services and dependencies in the main `./docker-compose.yml` file and comment out the related lines inside nginx's vhost configuration `./df-atls-nginx-proxy/etc/nginx/sites-available/default.conf`*
 
 *After you successfully build this configuration, you might have the images available on your local host; all relevant container should be running fine now. take note, that naming of your images might be slightly different then the names in my screenshot; the names will be chosen by docker-compose and and it all depends on your checkout directory*
 ![](https://dl.dropbox.com/s/tlaq3fy1f4w4ayl/scr_build_img_rslt3.png)
 
-*Check/visit the landing page of your workbench using your favorite browser ...*
+*Check/visit the landing page of your workbench using your favorite browser*
 ![](https://dl.dropbox.com/s/zxn0atya6ux0yf3/scr_landing_page_001.png)
 
 ### 4. Finalize your installation
@@ -72,7 +68,7 @@ Please follow the links of each available Atlassian product and finalize the ins
 
 *Take note, that we use default passwords here! All passwords could-and-should be changed in the corresponding compose.yml files of each mysql container folder. If you change your passwords/username there, you must also have to change the credentials inside our database backup-scripts inside `df-atls-base/scripts/backup_db.sh`* 
 
-#### 4.2. EMail Server
+#### 4.2. E-Mail Server
 We recommend to finalize the setup of the mail server configuration for jira and bitbucket (and confluence if you want). In my case I've created gmail account for this workbench and used the smtp/imap external access configuration to handle mail transport for my entire workbench. 
 
 ## Further Information
